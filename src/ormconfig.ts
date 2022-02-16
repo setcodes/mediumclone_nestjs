@@ -1,4 +1,4 @@
-import { ConnectionOptions } from "typeorm";
+import { ConnectionOptions } from 'typeorm';
 
 const config: ConnectionOptions = {
   type: 'postgres',
@@ -7,5 +7,7 @@ const config: ConnectionOptions = {
   username: 'meduimclone',
   password: '123',
   database: 'meduimclone',
+  entities: [__dirname + '/**/*.entity{.ts,.js}'],
+  synchronize: true,
 };
 export default config;
