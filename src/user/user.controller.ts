@@ -5,7 +5,7 @@ import {
   Get,
   Post,
   UsePipes,
-  ValidationPipe, UseGuards
+  ValidationPipe, UseGuards, Put
 } from "@nestjs/common";
 import { UserService } from '@app/user/user.service';
 import { CreateUserDto } from '@app/user/dto/createUser.dto';
@@ -16,6 +16,7 @@ import { ExpressRequestInterface } from "@app/types/expressRequest.interface";
 import { User } from "@app/decorators/user.decorator";
 import { UserEntity } from "@app/user/user.entity";
 import { AuthGuard } from "@app/guards/auth.guard";
+import { UpdateUserDto } from "@app/user/dto/update.user.dto";
 
 @Controller()
 export class UserController {
@@ -37,13 +38,25 @@ export class UserController {
     return this.userService.buildUserResponse(user);
   }
   @Get('user')
-  // @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard)
   async currentUser(
     @User() user: UserEntity,
     @User('id') userId: number,
   ): Promise<IUserResponse> {
     // console.log(req.user);
     console.log('user', userId);
+    return this.userService.buildUserResponse(user);
+  }
+  @Put('user')
+  @UseGuards(AuthGuard)
+  async updateCurrentUser(
+    @User('id') currentUserId: number,
+    @Body('user') updateUserDto: UpdateUserDto,
+  ): Promise<IUserResponse> {
+    const user = await this.userService.updateUser(
+      currentUserId,
+      updateUserDto,
+    );
     return this.userService.buildUserResponse(user);
   }
 }
